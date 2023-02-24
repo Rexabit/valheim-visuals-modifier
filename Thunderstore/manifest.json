@@ -1,0 +1,7 @@
+﻿{
+  "name": "Visuals_Modifier",
+  "version_number": "0.0.2",
+  "website_url": "https://github.com/Rexabit/valheim-visuals-modifier",
+  "description": "Allows the modification of materials at runtime based on configuration files.",
+  "dependencies": []
+}
