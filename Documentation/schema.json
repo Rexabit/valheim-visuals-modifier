@@ -32,11 +32,29 @@
     }
   },
   "required": [
-      "prefabName"
+    "prefabName"
   ],
-  "oneOf": [
-      { "required": ["material"] },
-      { "required": ["materials"] }
+  "allOf": [
+    {
+      "if": {
+        "required": ["materials"]
+      },
+      "then": {
+        "not": {
+          "required": ["material"]
+        }
+      }
+    },
+    {
+      "if": {
+        "required": ["material"]
+      },
+      "then": {
+        "not": {
+          "required": ["materials"]
+        }
+      }
+    }
   ],
   "definitions": {
     "rotation": {
