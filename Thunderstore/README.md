@@ -111,10 +111,10 @@ effect:
 
 #### Time Effect - Example
 ```yml
-prefabName: FrostyFenringHelm
+prefabName: CharredFenringHelm
 material:
   colors:
-    _Color: [1, 1, 1.25, 1]
+    _Color: [1, 1, 1, 1]
 effect:
   type: Time
   trigger:
@@ -122,7 +122,7 @@ effect:
     timeSpan: [4]
   material:
     colors:
-      _Color: [1, 1, 2, 1]
+      _Color: [2, 1, 1, 1]
     floats:
       _Saturation: 0.85
 ```

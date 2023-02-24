@@ -103,11 +103,18 @@
     "texture": {
       "description": "Texture values in the materials to modify",
       "type": "object",
-      "default": { "_MainTex": "[1, 1, 1, 1]" },
-      "additionalProperties": {
-        "type": "array", 
-        "items": {
-          "$ref": "#/definitions/color"
+      "properties": {
+        "name": {
+          "description": "The name of the material property texture",
+          "type": "string",
+          "default": "_MainTex"
+        },
+        "colors": {
+          "description": "The colors to be used for texture effects",
+          "type": "array", 
+          "items": {
+            "$ref": "#/definitions/color"
+          }
         }
       }
     },
@@ -128,7 +135,6 @@
           "items": {"type": "string"}
         }
       },
-      "required": ["name"],
       "allOf": [
         {
           "if": {
