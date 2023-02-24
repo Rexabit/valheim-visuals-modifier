@@ -18,7 +18,7 @@ Allows the modification of materials at runtime based on configuration files. Th
 
 ### Customizations
  - Update all materials with a single configuration.
- - Updating specific materials with a more precise configuration targeting every material.
+ - Updating specific materials with a more precise configuration targeting each individual material.
  - Update an underlying texture of a material
  - Add a material change based on a realtime effect
  - Update a light on an item
@@ -26,12 +26,42 @@ Allows the modification of materials at runtime based on configuration files. Th
 ### Results
 <img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/BlueFenringArmor.png?raw=true" height="400px"/>
 <img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/RedFenringArmor.png?raw=true" height="400px"/>
-<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/HueFenringArmor.png?raw=tru" height="400px"/>
-<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/RedRootArmor.png?raw=tru" height="400px"/>
-<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/ColouredAxes.png?raw=tru" height="400px"/>
-<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/Examples.png?raw=tru" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/HueFenringArmor.png?raw=true" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/RedRootArmor.png?raw=true" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/ColouredAxes.png?raw=true" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/Examples.png?raw=true" height="400px"/>
 
-## Getting Started - Yaml Schema
+## VSCode - Intellisense
+There is now a defined JSON schema that can be used with the VSCode YAML extension in order to provide more information while configurating items.
+
+### Example
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/Intellisense.png?raw=true" height="272px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/Biomes.png?raw=true" height="272px"/>
+
+### Installation
+* Install the 'YAML' extension
+* Open the 'Visuals' folder in VSCode
+  * Go to 'Settings' in r2modman
+  * Select ```Browse Profile Folder```
+  * Select Bepinex/config/Visuals
+  * Copy the folder path
+* Open workspace settings
+  * ```Ctrl + Shift + P```
+  * Type ```Workspace```
+  * Select ```Open Workspace Settings```
+* Type ```Schemas```
+* Select ```Edit in settings.json``` under ```Yaml: Schemas```
+* Make sure the file looks like this:
+```json
+{
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/Rexabit/valheim-visuals-modifier/master/Documentation/schema.json": "/*",
+    }
+}
+```
+
+
+## Getting Started
 ### Schema - Base
 ```yml
 prefabName: string
@@ -49,6 +79,10 @@ materials:
     <MATERIAL_PROPERTY_NAME>: [Red (decimal), Green (decimal), Blue (decimal), Alpha (decimal)]
   floats:
     <MATERIAL_PROPERTY_NAME>: (decimal)
+shader: # Modifies the shader used and material instances on the item
+  material: string (override the materials on the item to this material)
+  materials: array<string> (override specific materials on the item using the materials in this array)
+  name: string (name of the shader)
 icon: # Modify the rotation of the icon for an item
   x: rotation X degrees (decimal)
   y: rotation Y degrees (decimal)
@@ -58,7 +92,7 @@ light: # Modifies light renderers
   range: float
 ```
 
-Do not include changes for both 'material' & 'materials', use one or the other.
+Do not include changes for both 'material' & 'materials', use one or the other. This goes for the shader section as well.
 
 ### Schema - Time Effect
 Adding this block to the configuration file for an item will add a time based effect to the item. Where 'time' is the peak of the effect and the 'timeSpan' is the time span on either side of time where the effect starts to work.
@@ -74,6 +108,26 @@ effect:
     floats:
       <MATERIAL_PROPERTY_NAME>: (decimal)
 ```
+
+#### Time Effect - Example
+```yml
+prefabName: FrostyFenringHelm
+material:
+  colors:
+    _Color: [1, 1, 1.25, 1]
+effect:
+  type: Time
+  trigger:
+    time: [0]
+    timeSpan: [4]
+  material:
+    colors:
+      _Color: [1, 1, 2, 1]
+    floats:
+      _Saturation: 0.85
+```
+
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/MoonlitArmor.gif?raw=true" height="400px"/>
 
 ### Schema - Biome Effect
 Adding this block to the configuration file for an item will add a biome based effect to the item. The effect will trigger when the user enters the biome specified
@@ -104,7 +158,7 @@ effect:
       _EmissionColor: [0, 0, 0.75, 1]
 ```
 
-## Getting Started - Templates
+## Example Templates
 
 **Please note that the material itself must have the properties in the templates below, refer to the describe file for your item, they may be different**
 
@@ -138,6 +192,7 @@ materials:
 
 ## Extended Examples
 ### Forest Armor
+This modifies the Mage chest piece and turns it into an earth toned armor with the metal pieces hidden
 ```yml
 prefabName: RangerChest
 icon: # Updates the icon orientation for the item when snapshot.
@@ -159,6 +214,28 @@ material: # Force update all materials with the properties specified
     _Value: -0.01
     _Metallic: 1
     _Cutoff: 0.66 # Adjusts transparency layers removing more fur around the bracer and neck
+```
+
+### Sting
+Causes the 'Sting' prefab to glow blue when a Greydwarf is nearby.
+```yml
+prefabName: Sting
+icon:
+  x: -135
+  y: -45
+  z: 45
+material:
+  colors:
+    _Color: [1, 1, 1, 1]
+effect:
+  type: Proximity
+  trigger:
+    entities: [Greydwarf(Clone)]
+    radius: 50.0
+  material:
+    colors:
+      _Color: [0.7, 0.7, 1.2, 1]
+      _EmissionColor: [0, 0, 0.75, 1]
 ```
 
 ## Examples
