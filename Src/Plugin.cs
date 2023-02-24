@@ -16,7 +16,7 @@ namespace VisualsModifier
     {
         public const string PluginID   = "org.bepinex.visualsmodifier";
         public const string PluginName = "Visuals Modifier";
-        public const string PluginVersion = "0.0.1";
+        public const string PluginVersion = "0.0.2";
 
         public static readonly string Storage = Path.Combine(Paths.ConfigPath, "Visuals");
 
@@ -30,6 +30,12 @@ namespace VisualsModifier
 
         public Plugin()
         {
+            // Create folder immediately to avoid any issues looking for the folder
+            if (!Directory.Exists(Storage))
+            {
+                Directory.CreateDirectory(Storage);
+            }
+
             fileSystemWatcher = new FileSystemWatcher(Path.Combine(Paths.ConfigPath, "Visuals"), "Visual_*.yml");
 
             fileSystemWatcher.SynchronizingObject = ThreadingHelper.SynchronizingObject;
@@ -59,11 +65,6 @@ namespace VisualsModifier
 
             YamlData.AssignLocalValue(Reload());
             YamlData.ValueChanged += VisualSyncDetected;
-
-            if (!Directory.Exists(Storage))
-            {
-                Directory.CreateDirectory(Storage);
-            }
         }
 
         private Dictionary<string, string> Reload()

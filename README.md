@@ -14,24 +14,22 @@ Allows the modification of materials at runtime based on configuration files. Th
 - Make note of the material properties as these are the values you can modify.
 - Create a new file: ```./BepInEx/config/Visuals/Visual_<Prefab>.yml```
 - Inside the file start by setting the prefab name ```prefabName: <Prefab>```
-- From here there are a few different things you can do, the customizations can be as lite as you need them to be. See [Customizations](#customizations).
+- From here there are a few different things you can do, the customizations can be as lite as you need them to be.
 
 ### Customizations
- - Update all materials with a single configuration. [Example](#simple-colour-change) 
- - Updating specific materials with a more precise configuration targeting every material. [Example](#modify-specific-materials)
+ - Update all materials with a single configuration.
+ - Updating specific materials with a more precise configuration targeting every material.
  - Update an underlying texture of a material
  - Add a material change based on a realtime effect
  - Update a light on an item
 
-### Setting a change
-
 ### Results
-<img src="./Documentation/BlueFenringArmor.png" height="400px"/>
-<img src="./Documentation/RedFenringArmor.png" height="400px"/>
-<img src="./Documentation/HueFenringArmor.png" height="400px"/>
-<img src="./Documentation/RedRootArmor.png" height="400px"/>
-<img src="./Documentation/ColouredAxes.png" height="400px"/>
-<img src="./Documentation/Examples.png" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/BlueFenringArmor.png?raw=true" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/RedFenringArmor.png?raw=true" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/HueFenringArmor.png?raw=tru" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/RedRootArmor.png?raw=tru" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/ColouredAxes.png?raw=tru" height="400px"/>
+<img src="https://github.com/Rexabit/valheim-visuals-modifier/blob/master/Documentation/Examples.png?raw=tru" height="400px"/>
 
 ## Getting Started - Yaml Schema
 ### Schema - Base
