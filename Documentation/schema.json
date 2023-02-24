@@ -1,0 +1,200 @@
+﻿{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Visuals Modifier",
+  "type": "object",
+  "properties": {
+    "prefabName": { "type": "string" },
+    "shader": { "$ref": "#/definitions/shader"},
+    "material": { "$ref": "#/definitions/material" },
+    "materials": { "type": "array", "items": {"$ref": "#/definitions/material"}},
+    "icon": {"$ref": "#/definitions/rotation"},
+    "texture": { "$ref": "#/definitions/texture"},
+    "effect": {
+      "type": "object",
+      "description": "Applies an effect to an item",
+      "properties": {
+        "type": {
+          "description": "The type of effect to apply",
+          "enum": ["Proximity", "Biome", "Time"]
+        },
+        "material": {"$ref": "#/definitions/material"},
+        "trigger": {
+          "description": "The conditions for the trigger in which the effect is applied",
+          "type": "object"
+        }
+      },
+      "required": ["type", "material", "trigger"],
+      "allOf": [
+        { "$ref": "#/definitions/EFFECT_PROXIMITY"},
+        { "$ref": "#/definitions/EFFECT_BIOME"},
+        { "$ref": "#/definitions/EFFECT_TIME"}
+      ]
+    }
+  },
+  "required": [
+      "prefabName"
+  ],
+  "oneOf": [
+      { "required": ["material"] },
+      { "required": ["materials"] }
+  ],
+  "definitions": {
+    "rotation": {
+      "description": "Rotation in degrees",
+      "type": "object",
+      "properties": {
+        "x": { "type": "number" },
+        "y": { "type": "number" },
+        "z": { "type": "number" }
+      },
+      "required": ["x", "y", "z"]
+    },
+    "color": {
+      "description": "A color in array format [R, G, B, A]",
+      "default": "[1, 1, 1, 1]",
+      "type": "array",
+      "maxLength": 4,
+      "minLength": 4
+    },
+    "time": {
+      "description": "A time in array format [Hour, Minute, Second]",
+      "type": "array",
+      "maxLength": 3,
+      "minLength": 3
+    },
+    "material": {
+      "type": "object",
+      "properties": {
+        "colors": {
+          "description": "Material property names and color values",
+          "type": "object",
+          "default": { "_Color": "[1, 1, 1, 1]" },
+          "additionalProperties": {
+              "$ref": "#/definitions/color"
+          }
+        },
+        "floats": {
+          "description": "Material property names and number values",
+          "type": "object",
+          "additionalProperties": {
+            "type": "number"
+          }
+        }
+      }
+    },
+    "texture": {
+      "description": "Texture values in the materials to modify",
+      "type": "object",
+      "default": { "_MainTex": "[1, 1, 1, 1]" },
+      "additionalProperties": {
+        "type": "array", 
+        "items": {
+          "$ref": "#/definitions/color"
+        }
+      }
+    },
+    "shader": {
+      "type": "object",
+      "properties": {
+        "name": { 
+          "description": "The name of a shader to use",
+          "type": "string"
+        },
+        "material": {
+          "description": "The name of the material to override all materials",
+          "type": "string"
+        },
+        "materials": { 
+          "description": "The names of materials which will override the base materials",
+          "type": "array", 
+          "items": {"type": "string"}
+        }
+      },
+      "required": ["name"],
+      "allOf": [
+        {
+          "if": {
+            "required": ["materials"]
+          },
+          "then": {
+            "not": {
+              "required": ["material"]
+            }
+          }
+        },
+        {
+          "if": {
+            "required": ["material"]
+          },
+          "then": {
+            "not": {
+              "required": ["materials"]
+            }
+          }
+        }
+      ]
+    },
+    "EFFECT_PROXIMITY": {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": { "const" : "Proximity"} 
+        } 
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type":"object",
+            "properties": {
+              "entities": { "type": "array", "items": {"type": "string"}},
+              "radius": {"type": "number"}
+            },
+            "required": ["entities", "radius"]
+          }
+        }
+      }
+    },
+    "EFFECT_TIME": {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": { "const" : "Time" }
+        } 
+      },
+      "then": {
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type":"object",
+            "properties": {
+              "time": {"$ref": "#/definitions/time"},
+              "timeSpan": {"$ref": "#/definitions/time"}
+            },
+            "required": ["time", "timeSpan"]
+          }
+        }
+      }
+    },
+    "EFFECT_BIOME": {
+      "if": {
+        "type": "object",
+        "properties": {
+          "type": { "const" : "Biome"}
+        }
+      },
+      "then": { 
+        "type": "object",
+        "properties": {
+          "trigger": {
+            "type":"object",
+            "properties": {
+              "biome": {"enum": ["Meadows", "Swamp", "Mountain", "BlackForest", "Plains", "AshLands", "DeepNorth", "Ocean", "Mistlands"] }
+            },
+            "required": ["biome"]
+          }
+        }
+      }
+    }
+  }
+}
