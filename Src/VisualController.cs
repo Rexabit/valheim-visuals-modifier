@@ -123,6 +123,11 @@ namespace VisualsModifier
             // Fetch the skin
             Transform skin = item.transform.Find("attach_skin") ?? item.transform.Find("attach");
 
+            if (!skin)
+            {
+                skin = GetDropChild(item);
+            }
+
             if (skin)
             {
                 Renderer[] skin_renderers = skin.GetComponentsInChildren<Renderer>(true);
@@ -163,6 +168,9 @@ namespace VisualsModifier
 
                     data.Renderers.Add(rd);
                 }
+            } else
+            {
+                Debug.LogError($"[{Plugin.PluginName}]: Unable to find base Renderer for {prefabName}");
             }
 
             return data;
@@ -296,6 +304,8 @@ namespace VisualsModifier
                 if (data.Light != null)
                 {
                     Light l = item.GetComponentInChildren<Light>(true);
+
+
                     if (l != null)
                     {
                         if (data.Light.Color != null)
@@ -312,7 +322,7 @@ namespace VisualsModifier
             }
             catch (System.Exception e)
             {
-                Debug.LogError($"[${Plugin.PluginName}]: Failed to update material - {e.Message}");
+                Debug.LogError($"[{Plugin.PluginName}]: Failed to update material - {e.Message}");
             }
 
             ItemDrop drop = item.GetComponent<ItemDrop>();
@@ -388,7 +398,7 @@ namespace VisualsModifier
             }
             catch (System.Exception ex)
             {
-                Debug.LogError($"[${Plugin.PluginName}]: Failed to update icon - {ex.Message}");
+                Debug.LogError($"[{Plugin.PluginName}]: Failed to update icon - {ex.Message}");
             }
             finally
             {
@@ -447,7 +457,7 @@ namespace VisualsModifier
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError($"[${Plugin.PluginName}]: Failed to load visual data from {file}");
+                    Debug.LogError($"[{Plugin.PluginName}]: Failed to load visual data from {file}");
                 }
             }
         }
@@ -497,7 +507,7 @@ namespace VisualsModifier
                 }
                 catch (System.Exception e)
                 {
-                    Debug.LogError($"[${Plugin.PluginName}]: Failed to load material data from {file}");
+                    Debug.LogError($"[{Plugin.PluginName}]: Failed to load material data from {file}");
                 }
             }
         }
